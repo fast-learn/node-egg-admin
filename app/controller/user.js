@@ -4,33 +4,38 @@ const Controller = require('egg').Controller
 
 const { md5 } = require('../../utils/md5')
 const { PWD_SALT } = require('../../utils/constant')
-
+const { getToken,setToken }  = require('../../utils/getToken')
 class UserController extends Controller {
   async index() {
     const { ctx, app } = this
     let { username, password } = ctx.request.body
     password = md5(`${password}${PWD_SALT}`)
-    const sql = `select * from user where username='${username}' and password = '${password}'`
-    const user = await app.mysql.query(sql)
-    if (user && user.length > 0) {
+    const sql = `select * from user where username = '${username}' and password = '${password}'`
+    const userData = await app.mysql.query(sql)
+    if (userData && userData.length > 0) {
+      const userId = userData[0].id
+      const secret = app.config.jwt.secret
+      const token = getToken({ userId }, secret);
       const data = {
         code: 20000,
-        data: user
+        data: { token, userData }
       }
       ctx.body = data
     } else {
       ctx.body = { code: -1, msg: '用户名或密码错误，请检查后重新输入' }
     }
   }
-  async getInfo() {
-    const { ctx } = this
-    // 模拟vue-element-admin接口数据 确保能够进入到首页
+  async getUserInfo() {
+    const { ctx, app } = this
+    const { token } = ctx.query
+    const userId = setToken(token).userId
+    const sql = `select * from user where id = '${userId}'`
+    const userMessage = await app.mysql.query(sql)
     const data = {
-      avatar:
-        'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-      introduction: 'I am a super administrator',
-      name: 'Super Admin',
-      roles: ['admin']
+      avatar: userMessage[0].avatar,
+      introduction: userMessage[0].nickname,
+      name: userMessage[0].username,
+      roles: userMessage[0].roles.split(',')
     }
     ctx.body = { code: 20000, data: data }
   }
