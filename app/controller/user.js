@@ -4,7 +4,7 @@ const Controller = require('egg').Controller
 
 const { md5 } = require('../../utils/md5')
 const { PWD_SALT } = require('../../utils/constant')
-const { getToken,setToken }  = require('../../utils/getToken')
+const { getToken,setToken }  = require('../../utils/token')
 class UserController extends Controller {
   async index() {
     const { ctx, app } = this
