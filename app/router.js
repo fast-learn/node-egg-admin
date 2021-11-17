@@ -5,7 +5,8 @@
  */
 module.exports = app => {
   const { router, controller } = app;
-  router.get('/', controller.home.index);
-  router.post('/user/login', controller.user.index);
+  const tokenFailureHanndle = app.middleware.tokenFailureHanndle
+  router.get('/', tokenFailureHanndle, controller.home.index);
+  router.post('/user/login', controller.user.login);
   router.get('/user/info', app.jwt, controller.user.getUserInfo);
 };
