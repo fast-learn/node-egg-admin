@@ -25,7 +25,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1636943872769_5959'
 
   // add your middleware config here
-  config.middleware = ['tokenFailureHanndle']
+  config.middleware = ['jwtAuthorizedHandle']
   // jwt
   config.jwt = {
     secret: PRIVATE_KEY
