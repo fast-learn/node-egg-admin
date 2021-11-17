@@ -9,7 +9,7 @@ const {
   MYSQL_USER,
   MYSQL_PORT,
   MYSQL_HOST
-} = require('./db')
+} = require('../https/db')
 const { PRIVATE_KEY } = require('../utils/constant')
 /**
  * @param {Egg.EggAppInfo} appInfo app info
