@@ -1,13 +1,15 @@
 /* eslint valid-jsdoc: "off" */
 
 'use strict'
+const path = require('path')
+
 const {
   MYSQL_DB,
   MYSQL_PWD,
   MYSQL_USER,
   MYSQL_PORT,
   MYSQL_HOST
-} = require('./db')
+} = require('../https/db')
 const { PRIVATE_KEY } = require('../utils/constant')
 /**
  * @param {Egg.EggAppInfo} appInfo app info
@@ -23,7 +25,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1636943872769_5959'
 
   // add your middleware config here
-  config.middleware = []
+  config.middleware = ['jwtAuthorizedHandle']
   // jwt
   config.jwt = {
     secret: PRIVATE_KEY
@@ -45,6 +47,7 @@ module.exports = appInfo => {
     client: {
       host: MYSQL_HOST,
       port: MYSQL_PORT,
+      socketPath: '/tmp/mysql.sock',
       user: MYSQL_USER,
       password: MYSQL_PWD,
       database: MYSQL_DB
@@ -56,6 +59,12 @@ module.exports = appInfo => {
   const userConfig = {
     // myAppName: 'egg',
   }
+  config.cluster = {
+    https: {
+     key: path.join(__dirname,'../https/5578126__youbaobao.xyz_nginx/5578126__youbaobao.xyz.key'), // https 证书绝对目录
+     cert: path.join(__dirname,'../https/5578126__youbaobao.xyz_nginx/5578126__youbaobao.xyz.pem') // https 证书绝对目录
+    }
+  };
 
   return {
     ...config,
