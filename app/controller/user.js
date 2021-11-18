@@ -2,9 +2,9 @@
 
 const Controller = require('egg').Controller
 
-const { md5 } = require('../../utils/md5')
-const { PWD_SALT } = require('../../utils/constant')
-const { generateToken, parseToken } = require('../../utils/token')
+const { md5 } = require('../utils/md5')
+const { PWD_SALT } = require('../utils/constant')
+const { generateToken, parseToken } = require('../utils/token')
 class UserController extends Controller {
   async login() {
     const { ctx, app } = this
@@ -19,7 +19,7 @@ class UserController extends Controller {
         const token = generateToken({ userId }, secret)
         const data = {
           code: 20000,
-          data: { token, userData }
+          data: { token }
         }
         ctx.body = data
       } else {
