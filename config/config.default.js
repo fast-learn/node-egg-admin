@@ -9,8 +9,8 @@ const {
   MYSQL_USER,
   MYSQL_PORT,
   MYSQL_HOST
-} = require('../https/db')
-const { PRIVATE_KEY } = require('../utils/constant')
+} = require('./db')
+const { PRIVATE_KEY } = require('../app/utils/constant')
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -47,7 +47,6 @@ module.exports = appInfo => {
     client: {
       host: MYSQL_HOST,
       port: MYSQL_PORT,
-      socketPath: '/tmp/mysql.sock',
       user: MYSQL_USER,
       password: MYSQL_PWD,
       database: MYSQL_DB
@@ -61,8 +60,8 @@ module.exports = appInfo => {
   }
   config.cluster = {
     https: {
-     key: path.join(__dirname,'../https/5578126__youbaobao.xyz_nginx/5578126__youbaobao.xyz.key'), // https 证书绝对目录
-     cert: path.join(__dirname,'../https/5578126__youbaobao.xyz_nginx/5578126__youbaobao.xyz.pem') // https 证书绝对目录
+     key: path.join(__dirname,'./https/youbaobao.xyz.key'), // https 证书绝对目录
+     cert: path.join(__dirname,'./https/youbaobao.xyz.pem') // https 证书绝对目录
     }
   };
 

@@ -3,8 +3,8 @@ npm-debug.log
 yarn-error.log
 node_modules/
 package-lock.json
-https/
 config/db.js
+config/https/
 yarn.lock
 coverage/
 .idea/
