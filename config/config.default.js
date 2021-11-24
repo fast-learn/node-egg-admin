@@ -54,6 +54,9 @@ module.exports = appInfo => {
     app: true,
     agent: false
   }
+  config.multipart = {
+    single: 'file',
+  }
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
