@@ -36,8 +36,6 @@ class UserController extends Controller {
   }
   async getUserInfo() {
     const { ctx, app } = this;
-    console.log(app.config.userId,1111)
-
     const token = ctx.get('authorization').split(' ')[1];
     const userId = parseToken(token).userId;
     const sql = `select * from admin_user where id = '${userId}'`;
