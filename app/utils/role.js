@@ -63,6 +63,7 @@ async function getMenuId(app, ctx, roleIdList) {
   }
   return unique(menuIDList)
 }
+// 数据去重
 function unique(arr) {
   for (var i = 0; i < arr.length; i++) {
     for (var j = i + 1; j < arr.length; j++) {
@@ -74,10 +75,19 @@ function unique(arr) {
   }
   return arr;
 }
-async function getMenuLists(app, ctx, meneIDList) {
+// 排序
+function compare(sort,id){
+  return function(a,b){
+      var value1 = a[sort];
+      var value2 = b[sort];
+      return value1 - value2;
+  }
+}
+async function getMenuLists(app, ctx, menuIdList) {
   const newMenuData = [];
-  for (let i = 0; i < meneIDList.length; i++) {
-    const getMenuListSql = `select * from menu where id='${meneIDList[i].menu_id}'`;
+ 
+  for (let i = 0; i < menuIdList.length; i++) {
+    const getMenuListSql = `select * from menu where id='${menuIdList[i].menu_id}' order by sort,id asc`;
     try {
       const menuMessageg = await app.mysql.query(getMenuListSql);
       if (menuMessageg && menuMessageg.length > 0 ) {
@@ -88,7 +98,8 @@ async function getMenuLists(app, ctx, meneIDList) {
       app.logger.error(e.name + ':getMenuLists', e.message)
     }
   }
-  return newMenuData;
+  const newMenuIdList = newMenuData.sort(compare('sort'))
+  return newMenuIdList;
 }
 module.exports = {
   replaceNumber,

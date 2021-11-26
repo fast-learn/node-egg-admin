@@ -48,11 +48,40 @@ class RoleController extends Controller {
         const data = { list, count: counts[0].count, page, pageSize };
         ctx.body = { code: 20000, data };
       } else {
-        ctx.body = { code: -1, msg: '获取用户列表失败' };
+        ctx.body = { code: -1, msg: '该用户不存在,请检查查询条件' };
       }
     } catch (e) {
       ctx.body = { code: -1, msg: '获取用户列表失败，失败原因：' + e.message };
       app.logger.error(e.name + ':userRoleList', e.message);
+    }
+  }
+
+  async getUserRole(){
+    const { ctx, app } = this;
+    const {query} = ctx
+    const getUserRoleSql = `select role_id from user_role where user_id='${query.id}'`;
+    try {
+      const userRoleId = await app.mysql.query(getUserRoleSql)
+      if(userRoleId && userRoleId.length > 0 ){
+        const roleList = []
+        for(let item = 0 ; item <userRoleId.length; item++ ){
+          const getRoleList = `select name from role where id='${userRoleId[item].role_id}'`;
+          try {
+            const roleName = await app.mysql.query(getRoleList)
+            if(roleName){
+              const roleNameMessage = roleName[0];
+              roleList.push(roleNameMessage.name)
+            }
+          } catch (error) {
+            ctx.body = { code: -1, msg: '查询角色信息失败' + e.message };
+            app.logger.error(e.name + ':getUserRole', e.message);
+          }
+        }
+        ctx.body = { code: 20000, data: roleList};
+      }
+    } catch (e) {
+      ctx.body = { code: -1, msg: '获取用户角色失败' + e.message };
+      app.logger.error(e.name + ':getUserRole', e.message);
     }
   }
   async deleteUser() {
@@ -326,7 +355,7 @@ class RoleController extends Controller {
       if (sort) {
         const symbol = sort[0];
         const order = symbol === '+' ? 'asc' : 'desc';
-        sortSql = ` order by sort ${order}`;
+        sortSql = ` order by sort,id ${order}`;
       }
       MenuListSql = `select * from menu ` + sortSql;
     } else {

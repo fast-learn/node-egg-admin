@@ -10,6 +10,7 @@ module.exports = app => {
   router.get('/user/info', app.jwt, controller.user.getUserInfo);
   // 用户管理
   router.get('/role/getUserList', controller.role.getUserList);
+  router.get('/role/getUserRole', controller.role.getUserRole);
   router.get('/role/deleteUser', controller.role.deleteUser);
   router.get('/role/getRoleList', controller.role.getRoleList);
   router.post('/role/addUserAvatar', controller.role.addUserAvatar);

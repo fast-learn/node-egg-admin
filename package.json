@@ -15,7 +15,8 @@
     "egg-mysql": "^3.0.0",
     "egg-scripts": "^2.11.0",
     "jsonwebtoken": "^8.5.1",
-    "stream-to-array": "^2.3.0"
+    "stream-to-array": "^2.3.0",
+    "utility": "^1.17.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",

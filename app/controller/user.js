@@ -1,26 +1,31 @@
 'use strict'
 
 const Controller = require('egg').Controller;
-const { md5 } = require('../utils/md5');
-const { PWD_SALT } = require('../utils/constant');
+const utils = require('utility');
+
 const { generateToken, parseToken } = require('../utils/token');
 class UserController extends Controller {
   async login() {
     const { ctx, app } = this;
     let { username, password } = ctx.request.body;
-    password = md5(`${password}${PWD_SALT}`);
+    password = utils.sha1(`${password}`);
     const sql = `select * from admin_user where username = '${username}' and password = '${password}'`;
     try {
       const userData = await app.mysql.query(sql);
       if (userData && userData.length > 0) {
         const userId = userData[0].id;
         const secret = app.config.jwt.secret;
-        const token = generateToken({ userId }, secret);
-        const data = {
-          code: 20000,
-          data: { token }
-        };
-        ctx.body = data;
+        const status = userData[0].status;
+        if(status == 0){
+          ctx.body = { code: -1, msg: '该用户已删除' };
+        }else{
+          const token = generateToken({ userId }, secret);
+          const data = {
+            code: 20000,
+            data: { token }
+          };
+          ctx.body = data;
+        }
       } else {
         ctx.body = { code: -1, msg: '用户名或密码错误，请检查后重新输入' };
       }
