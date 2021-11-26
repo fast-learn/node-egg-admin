@@ -48,7 +48,7 @@ class RoleController extends Controller {
         const data = { list, count: counts[0].count, page, pageSize };
         ctx.body = { code: 20000, data };
       } else {
-        ctx.body = { code: -1, msg: '获取用户列表失败' };
+        ctx.body = { code: -1, msg: '该用户不存在,请检查查询条件' };
       }
     } catch (e) {
       ctx.body = { code: -1, msg: '获取用户列表失败，失败原因：' + e.message };
@@ -326,7 +326,7 @@ class RoleController extends Controller {
       if (sort) {
         const symbol = sort[0];
         const order = symbol === '+' ? 'asc' : 'desc';
-        sortSql = ` order by sort ${order}`;
+        sortSql = ` order by sort,id ${order}`;
       }
       MenuListSql = `select * from menu ` + sortSql;
     } else {
