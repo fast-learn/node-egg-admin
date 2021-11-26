@@ -7,6 +7,8 @@ function md5(s) {
     .digest('hex')
 }
 
+
 module.exports = {
   md5
+
 }
